@@ -1,0 +1,63 @@
+/*
+class Solution {
+    int[][] memo;
+    char[] c1, c2;
+    public int minDistance(String word1, String word2) {
+        int n1 = word1.length(), n2 = word2.length();
+        memo = new int[n1][n2];
+        for (int i = 0; i < n1; i++) {
+            Arrays.fill(memo[i], -1);
+        }
+        c1 = word1.toCharArray();
+        c2 = word2.toCharArray();
+        return dfs(n1 - 1, n2 - 1);
+
+    }
+
+    private int dfs(int i, int j) {
+        if (i < 0) return j + 1;
+        if (j < 0) return i + 1;
+
+        if (memo[i][j] != -1) return memo[i][j];
+
+        char x = c1[i], y = c2[j];
+        if (x == y)
+            memo[i][j] = dfs(i - 1, j - 1);
+        else
+            memo[i][j] = Math.min(Math.min(dfs(i - 1, j), dfs(i, j - 1)), dfs(i - 1, j - 1)) + 1;
+
+        return memo[i][j];
+    }
+}
+*/
+
+class Solution {
+ 
+    char[] c1, c2;
+    public int minDistance(String word1, String word2) {
+        c1 = word1.toCharArray();
+        c2 = word2.toCharArray();
+        int n = word1.length(), m = word2.length();
+        int[][] dp = new int[n + 1][m + 1];
+
+        for (int i = 0; i < n + 1; i++)
+            dp[i][0] = i;
+        for (int j = 0; j < m + 1; j++)
+            dp[0][j] = j;
+        
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (c1[i] == c2[j]) {
+                    dp[i + 1][j + 1] = dp[i][j];
+                }
+                else {
+                    dp[i + 1][j + 1] = Math.min(Math.min(dp[i][j + 1], dp[i + 1][j]), dp[i][j]) + 1;
+                }
+            }
+        }
+        return dp[n][m];
+        
+    }
+}
+
+
