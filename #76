@@ -8,7 +8,7 @@ class Solution {
 
         int left = 0;
         Map<Character, Integer> mapWindow = new HashMap<>();
-        int min_left = 0, min_right = 0;
+        int min_left = 0, min_right = Integer.MAX_VALUE;
         int matchCount = 0;
         for (int right = 0; right < m; right++) {
             char c = s.charAt(right);
@@ -20,7 +20,7 @@ class Solution {
             }
 
             while (left <= right && matchCount == n) {
-                if (min_right == 0 || right - left < min_right - min_left) {
+                if (right - left < min_right - min_left) {
                     min_left = left;
                     min_right = right;
                 }
@@ -34,6 +34,6 @@ class Solution {
                 left++;
             }
         }
-        return min_right > m ? "" : s.substring(min_left, min_right + 1);
+        return min_right == Integer.MAX_VALUE ? "" : s.substring(min_left, min_right + 1);
     }
 }
