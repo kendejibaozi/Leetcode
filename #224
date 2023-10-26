@@ -1,0 +1,41 @@
+class Solution {
+    public int calculate(String s) {
+        Stack<Integer> numsStack = new Stack<>();    // 存放数字的栈
+        Stack<Integer> opsStack = new Stack<>();     // 存放操作符的栈，1表示"+", -1表示"-"
+
+        int num = 0;    // 当前数字
+        int sign = 1;   // 当前符号
+        int result = 0; // 当前结果
+
+        // 遍历输入字符串
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            
+            if (Character.isDigit(c)) { 
+                num = num * 10 + (c - '0'); // 计算当前数字
+            } else if (c == '+') {
+                result += sign * num; // 更新结果
+                num = 0;  // 重置num
+                sign = 1; // 设置符号为+
+            } else if (c == '-') {
+                result += sign * num; // 更新结果
+                num = 0;  // 重置num
+                sign = -1; // 设置符号为-
+            } else if (c == '(') {
+                // 将"("之前的结果和符号压栈，然后重置结果和符号
+                numsStack.push(result);
+                opsStack.push(sign);
+                result = 0;
+                sign = 1;
+            } else if (c == ')') {
+                // ")"前面的数字及其符号影响的计算结果加到"("前面的结果上
+                result += sign * num; // 先加上最后的数字
+                result = numsStack.pop() + opsStack.pop() * result; // 加上"("前面的结果
+                num = 0; // 重置num
+            }
+        }
+        // 不要忘记最后一个数字
+        result += sign * num;
+        return result;
+    }
+}
