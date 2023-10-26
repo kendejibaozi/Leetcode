@@ -1,0 +1,58 @@
+class Solution {
+    public int electricCarPlan(int[][] paths, int cnt, int start, int end, int[] charge) {
+
+        //建图
+        int n = charge.length;
+        List<int[]>[] g = new List[n];
+        for (int i = 0; i < n; i++)
+            g[i] = new ArrayList<>();
+        for (var x : paths) {
+            g[x[0]].add(new int[]{x[1], x[2]});
+            g[x[1]].add(new int[]{x[0], x[2]});
+        }
+
+        //PriorityQueue {当前花费时间，当前城市，当前电量}
+        PriorityQueue<long[]> pq = new PriorityQueue<>((a, b) -> Long.compare(a[0], b[0]));
+        pq.offer(new long[]{0, start, 0});
+
+        //建立Set记录已经访问过的状态
+        Set<String> set = new HashSet<>();
+
+        //遍历Queue
+        while (!pq.isEmpty()) {
+
+            //拿出当前最短时间状态处理
+            long[] x = pq.poll();
+            long time = x[0];
+            int city = (int)x[1];
+            long battery = x[2];
+
+            if (city == end)
+                return (int)time;
+            //检查是否已经访问过
+            String s = city + "," + battery;
+            if (set.contains(s))
+                continue;
+            set.add(s);
+
+            //充电 注意：每次只冲一单位
+            if (battery < cnt) {
+                pq.offer(new long[]{time + charge[city], city, battery + 1});
+            }
+
+            //遍历下一个节点
+            for (int[] nxt : g[city]) {
+                //如果电量能到
+                int nextcity = nxt[0];
+                int dist = nxt[1];
+                if (battery >= dist) {
+                    pq.offer(new long[]{time + dist, nextcity, battery - dist});
+                }
+            }
+        }
+
+        //结束
+        return -1;
+
+    }
+}
