@@ -1,0 +1,52 @@
+class Solution {
+    public List<Integer> findSubstring(String s, String[] words) {
+
+        List<Integer> res = new ArrayList<>();
+        if (s.length() == 0 || words.length == 0) return res;
+
+        int n = s.length();
+
+        Map<String, Integer> wordCount = new HashMap<>();
+        for (var x : words) {
+            wordCount.put(x, wordCount.getOrDefault(x, 0) + 1);
+        }
+
+        int wordLen = words[0].length(), m = words.length;
+        int totalLen = wordLen * m;  
+
+        for (int i = 0; i < wordLen; i++) {
+            int left = i, right = i;
+            Map<String, Integer> curCount = new HashMap<>();
+
+            while (right + wordLen <= n) {
+                String curWord = s.substring(right, right + wordLen);
+                //移动右指针
+                right += wordLen;
+
+                //判断当前word是否合法
+                if (wordCount.containsKey(curWord)) {
+                    //加到当前子串
+                    curCount.put(curWord, curCount.getOrDefault(curWord, 0) + 1);
+                    //判断子串是否合法，如果不合法，移动左指针
+                    while (curCount.get(curWord) > wordCount.get(curWord)) {
+                        String toDelete = s.substring(left, left + wordLen);
+                        curCount.put(toDelete, curCount.get(toDelete) - 1);
+                        left += wordLen;
+                    }
+                    //如果刚好找到，更新结果
+                    if (right - left == totalLen) {
+                    //if (curCount.equals(wordCount)) { 这个判断也可以！！！ 
+                        res.add(left);
+                    }
+                }
+                //如果不合法，当前子串都不要了，移动左指针
+                else {
+                    left = right;
+                    curCount.clear();
+                }
+            }
+        }
+        return res;
+
+    }
+}
