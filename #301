@@ -1,0 +1,117 @@
+// 记忆化搜索 太慢
+/*
+class Solution {
+    StringBuilder path;
+    Set<String> res;
+    String s;
+
+    public List<String> removeInvalidParentheses(String s) {
+        this.s = s;
+
+        path = new StringBuilder();
+        res = new HashSet<>();
+        int left = 0, right = 0;
+        for (char c : s.toCharArray()) {
+            if (c == '(') {
+                left++;
+            }
+            else if (c == ')') {
+                if (left > 0) left--;
+                else right++;
+            }
+        }
+        //dfs(index, 当前left, 当前right, 剩余left, 剩余right)
+        //dfs(0, cur_left, cur_right, remain_left, remain_right);
+        dfs(0, 0, 0, left, right);
+        return new ArrayList<>(res);
+    }
+
+    private void dfs(int index, int cur_left, int cur_right, int remain_left, int remain_right) {
+        if (index == s.length()) {
+            if (cur_left == cur_right) {
+                res.add(path.toString());
+            }
+            return;
+        }
+        char ch = s.charAt(index);
+        //buxuan 也就是删除 
+        if ((ch == '(' && remain_left > 0) || (ch == ')' && remain_right > 0)) {
+            dfs(index + 1, cur_left, cur_right, remain_left - (ch == '(' ? 1 : 0), remain_right - (ch == ')' ? 1 : 0));
+        }
+
+        //xuan 就是不删除当前字符
+        
+        path.append(ch);
+        
+        if (ch != '(' && ch != ')') {
+            dfs(index + 1, cur_left, cur_right, remain_left, remain_right);
+        }
+        else if (ch == '(') {
+            dfs(index + 1, cur_left + 1, cur_right, remain_left, remain_right);
+        }
+        else if (cur_left > cur_right) {
+            dfs(index + 1, cur_left, cur_right + 1, remain_left, remain_right);
+        }
+
+        path.deleteCharAt(path.length() - 1);
+    }
+}
+*/
+
+class Solution {
+    public List<String> removeInvalidParentheses(String s) {
+
+        Set<String> res = new HashSet<>();
+        Queue<String> q = new ArrayDeque<>();
+        q.offer(s);
+        boolean isFound = false;
+
+        while (!q.isEmpty()) {
+
+            int size = q.size();
+            Set<String> nextLevel = new HashSet<>();
+
+            for (int i = 0; i < size; i++) {
+                String cur = q.poll();
+                
+                //如果有效 就是当前level
+                if (isValid(cur)) {
+                    isFound = true;
+                    res.add(cur);
+                }
+
+                if (!isFound) {
+                    //遍历当前字符串的每一个字符，试图删掉，然后加入队列
+                    for (int k = 0; k < cur.length(); k++) {
+                        if (cur.charAt(k) != '(' && cur.charAt(k) != ')')
+                            continue;
+                        
+                        String nextS = cur.substring(0, k) + cur.substring(k + 1);
+                        if (!nextLevel.contains(nextS)) {
+                            q.offer(nextS);
+                            nextLevel.add(nextS);
+                        }
+                    }
+
+                }     
+            }
+            if (isFound)
+                break;
+        }
+
+        return new ArrayList<>(res);
+    }
+
+    private boolean isValid(String s) {
+        int left = 0;
+        for (char c : s.toCharArray()) {
+            if (c == '(') left++;
+            if (c == ')') left--;
+            if (left < 0) return false;
+        }
+        return left == 0;
+    }
+}
+
+
+
