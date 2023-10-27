@@ -114,4 +114,38 @@ class Solution {
 }
 
 
+//左右两次遍历，最快
+class Solution {
+    public List<String> removeInvalidParentheses(String s) {
+        
+        List<String> res = new ArrayList<>();
+        dfs(s, res, 0, 0, new char[]{'(', ')'});
+        return res;
+    }
+
+    private void dfs(String s, List<String> res, int lastI, int lastJ, char[] pair) {
+        int cnt = 0;
+        for (int i = lastI; i < s.length(); i++) {
+            if (s.charAt(i) == pair[0]) cnt++;
+            if (s.charAt(i) == pair[1]) cnt--;
+            if (cnt >= 0) continue;
+
+            for (int j = lastJ; j <= i; j++) {
+                if (s.charAt(j) == pair[1] && (j == lastJ || s.charAt(j - 1) != pair[1])) {
+                    dfs(s.substring(0, j) + s.substring(j + 1), res, i, j, pair);
+                }
+            }
+            return;
+        }
+
+        String reversed = new StringBuilder(s).reverse().toString();
+        if (pair[0] == '(') {
+            dfs(reversed, res, 0, 0, new char[]{')', '('});
+        }
+        else {
+            res.add(reversed);
+        }
+    }
+}
+
 
