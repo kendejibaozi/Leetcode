@@ -1,0 +1,53 @@
+class Solution {
+    int res = 0;
+    boolean[] visited, plus, minus;
+    char[][] path;
+    int n;
+    public int totalNQueens(int n) {
+        this.n = n;
+        path = new char[n][n];
+        for (int i = 0; i < n; i++) {
+            Arrays.fill(path[i], '.');
+        }
+        visited = new boolean[n];
+        plus = new boolean[n * 2 - 1];
+        minus = new boolean[n * 2 - 1];
+        dfs(0);
+        return res;
+    }
+
+    private void dfs(int i) {
+        if (i == n) {
+            //tian jia jie guo
+            /*
+            List<String> rows = new ArrayList<>();
+            for (int k = 0; k < n; k++) {
+                StringBuilder sb = new StringBuilder();
+                for (int l = 0; l < n; l++) {
+                    sb.append(path[k][l]);
+                }
+                rows.add(sb.toString());
+            }
+            */
+            res++;
+            return;
+        }
+
+        for (int j = 0; j < n; j++) {
+            if (!visited[j] && !plus[i + j] && !minus[i - j + n - 1]) {
+                visited[j] = true;
+                plus[i + j] = true;
+                minus[i - j + n - 1] = true;
+
+                path[i][j] = 'Q';
+                dfs(i + 1);
+
+                visited[j] = false;
+                plus[i + j] = false;
+                minus[i - j + n - 1] = false;
+                path[i][j] = '.';
+            }
+        }
+    }
+
+}
