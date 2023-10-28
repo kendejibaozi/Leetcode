@@ -1,0 +1,32 @@
+class Solution {
+    public String shortestPalindrome(String s) {
+
+        String newS = s + "#" + new StringBuilder(s).reverse().toString();
+        int[] next = preF(newS);
+        
+        if (next[next.length - 1] == s.length()) {
+            return s;
+        }
+        else {
+            String t = new StringBuilder(s.substring(next[next.length - 1])).reverse().toString();
+            return t + s;
+        }
+
+    }
+
+    private int[] preF(String s) {
+        int n = s.length();
+        int[] next = new int[n];
+        int j = 0;
+        for (int i = 1; i < n; i++) {
+            while (j > 0 && s.charAt(i) != s.charAt(j)) {
+                j = next[j - 1];
+            }
+            if (s.charAt(i) == s.charAt(j)) {
+                j++;
+            }
+            next[i] = j;
+        }
+        return next;
+    }
+}
