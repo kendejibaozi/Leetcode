@@ -1,0 +1,77 @@
+/*
+class Solution {
+    int n, k, cnt;
+    int[] chars;
+    String res;
+    boolean[] visited;
+    
+    public String getPermutation(int n, int k) {
+        this.n = n;
+        this.k = k;
+        chars = new int[n];
+        visited = new boolean[n];
+        dfs(0);
+        return res;
+
+    }
+
+    private void dfs(int i) {
+        if (i == n) {
+            cnt++;
+            if (cnt == k) {
+                //ji lu da an
+                StringBuilder sb = new StringBuilder();
+                for (var x : chars) {
+                    sb.append(x);
+                }
+                res = sb.toString();
+            }
+            //记录答案
+            return;
+        }
+
+        for (int j = 0; j < n; j++) {
+            if (!visited[j]) {
+                visited[j] = true;
+                chars[i] = j + 1;
+                
+                dfs(i + 1);
+
+                //恢复现场
+                visited[j] = false;
+            }
+        }
+        return;
+
+    }
+}
+*/
+
+class Solution {
+    public String getPermutation(int n, int k) {
+
+        List<Integer> nums = new ArrayList<>();
+        for (int i = 1; i <= n; i++) {
+            nums.add(i);
+        }
+
+        int[] fact = new int[n];
+        fact[0] = 1;
+        for (int i = 1; i < n; i++) {
+            fact[i] = fact[i - 1] * i;
+        }
+
+        StringBuilder res = new StringBuilder();
+
+        k--;
+
+        for (int i = n - 1; i >= 0; i--) {
+            int index = k / fact[i];
+            res.append(nums.remove(index));
+            k -= index * fact[i];
+        }
+        return res.toString();
+
+
+    }
+}
