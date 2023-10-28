@@ -1,0 +1,29 @@
+/*
+class Solution {
+    int[][] memo;
+    public int maxProfit(int[] prices) {
+        int n = prices.length;
+        memo = new int[n][2];
+        for (int i = 0; i < n; i++) {
+            Arrays.fill(memo[i], Integer.MIN_VALUE);
+        }
+        return dfs(prices, n - 1, 0);
+    }
+
+    private int dfs(int[] prices, int i, int c) {
+        if (i < 0) return c == 0 ? 0 : Integer.MIN_VALUE;
+        if (memo[i][c] != Integer.MIN_VALUE) return memo[i][c];
+        if (c == 0) return memo[i][c] = Math.max(dfs(prices, i - 1, 0), dfs(prices, i - 1, 1) + prices[i]);
+        else return memo[i][c] = Math.max(dfs(prices, i - 1, 1), dfs(prices, i - 1, 0) - prices[i]);
+    }
+}
+*/
+class Solution {
+    public int maxProfit(int[] prices) {
+        int res = 0;
+        for (int i = 1; i < prices.length; i++) {
+            res += (prices[i] - prices[i - 1] > 0) ? prices[i] - prices[i - 1] : 0;
+        }
+        return res;
+    }
+}
