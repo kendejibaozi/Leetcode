@@ -1,0 +1,54 @@
+class Solution {
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        Set<String> wordSet = new HashSet<>(wordList); // 用Set加速单词查找
+        if (!wordSet.contains(endWord)) return 0;
+        
+        // 预处理每个位置可出现的字符
+        Map<Integer, Set<Character>> validCharsAtPosition = new HashMap<>();
+        for (String word : wordList) {
+            for (int i = 0; i < word.length(); i++) {
+                validCharsAtPosition.computeIfAbsent(i, k -> new HashSet<>()).add(word.charAt(i));
+            }
+        }
+        
+        Set<String> beginVisited = new HashSet<>(), endVisited = new HashSet<>();
+        beginVisited.add(beginWord);
+        endVisited.add(endWord);
+        
+        int step = 1;
+        while (!beginVisited.isEmpty() && !endVisited.isEmpty()) {
+            if (beginVisited.size() > endVisited.size()) {
+                Set<String> temp = beginVisited;
+                beginVisited = endVisited;
+                endVisited = temp;
+            }
+            
+            Set<String> nextLevelVisited = new HashSet<>();
+            for (String word : beginVisited) {
+                char[] characters = word.toCharArray();
+                for (int i = 0; i < characters.length; i++) {
+                    char originalChar = characters[i];
+                    
+                    // 只试验在该位置可能出现的字符
+                    for (char c : validCharsAtPosition.get(i)) {
+                        if (c == originalChar) continue;
+                        characters[i] = c;
+                        String newWord = new String(characters);
+                        if (endVisited.contains(newWord)) {
+                            return step + 1;
+                        }
+                        if (wordSet.contains(newWord)) {
+                            nextLevelVisited.add(newWord);
+                            wordSet.remove(newWord);
+                        }
+                    }
+                    
+                    characters[i] = originalChar; // 恢复原始字符
+                }
+            }
+            beginVisited = nextLevelVisited;
+            step++;
+        }
+        return 0; // 没有找到转换序列
+    }
+}
