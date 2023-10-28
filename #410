@@ -1,34 +1,30 @@
 class Solution {
     public int splitArray(int[] nums, int k) {
+        
         int left = 0, right = 0;
-        for (int i : nums) {
-            if (i > left) left = i;
-            right += i;
+        for (int num : nums) {
+            right += num;
+            if (num > left) left = num;
         }
+
         while (left <= right) {
             int mid = left + (right - left) / 2;
-
-            //分组分太多了
-            if (dfs(nums, mid, k)) {
-                left = mid + 1;
-            }
-            //分组太少了
+            
+            if (lowerBound(nums, mid, k)) left = mid + 1;//分组太多了，不行
             else right = mid - 1;
         }
         return left;
     }
 
-    private boolean dfs(int[] nums, int mid, int k) {
-        int count = 0, sum = 0;
-        for (int i = 0; i < nums.length; i++) {
-            if (sum + nums[i] > mid) {
-                count++;
-                sum = nums[i];
-            }
-            else {
-                sum += nums[i];
+    private boolean lowerBound(int[] nums, int mid, int k) {
+        int temp = 0, cnt = 1;
+        for (int num : nums) {
+            temp += num;
+            if (temp > mid) {
+                cnt++;
+                temp = num;
             }
         }
-        return count >= k;
+        return cnt > k;
     }
 }
