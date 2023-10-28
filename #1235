@@ -1,0 +1,29 @@
+class Solution {
+    int[][] jobs;
+    public int jobScheduling(int[] startTime, int[] endTime, int[] profit) {
+        int n = startTime.length;
+        jobs = new int[n][3];
+        for (int i = 0; i < n; i++) {
+            jobs[i][0] = startTime[i];
+            jobs[i][1] = endTime[i];
+            jobs[i][2] = profit[i];
+        }
+        Arrays.sort(jobs, (a, b) -> a[1] - b[1]);
+        int[] dp = new int[n + 1];
+        for (int i = 0; i < n; i++) {
+            int j = lowerBound(0, i - 1, jobs[i][0]);
+            dp[i + 1] = Math.max(dp[i], dp[j + 1] + jobs[i][2]);
+        }
+        return dp[n];
+    }
+
+    private int lowerBound(int left, int right, int target) {
+        int t = target + 1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (jobs[mid][1] < t) left = mid + 1;
+            else right = mid - 1;
+        }
+        return right;
+    }
+}
