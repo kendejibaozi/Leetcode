@@ -1,0 +1,34 @@
+class Solution {
+    public String rearrangeString(String s, int k) {
+        
+        Map<Character, Integer> map = new HashMap<>();
+
+        for (var x : s.toCharArray()) {
+            map.put(x, map.getOrDefault(x, 0) + 1);
+        }
+
+        PriorityQueue<Map.Entry<Character, Integer>> pq = new PriorityQueue<>((a, b) -> b.getValue() - a.getValue());
+
+        Queue<Map.Entry<Character, Integer>> waiting = new ArrayDeque<>();
+
+        pq.addAll(map.entrySet());
+
+        StringBuilder res = new StringBuilder();
+
+        while (!pq.isEmpty()) {
+            Map.Entry<Character, Integer> cur = pq.poll();
+            res.append(cur.getKey());
+            cur.setValue(cur.getValue() - 1);
+            waiting.offer(cur);
+
+            if (waiting.size() < k)
+                continue;
+            
+            Map.Entry<Character, Integer> nxt = waiting.poll();
+            if (nxt.getValue() > 0)
+                pq.offer(nxt);
+        }
+        return res.length() == s.length() ? res.toString() : "";
+
+    }
+}
