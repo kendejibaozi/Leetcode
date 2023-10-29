@@ -1,0 +1,50 @@
+/*
+class Solution {
+    public List<Integer> minAvailableDuration(int[][] slots1, int[][] slots2, int duration) {
+        
+        List<Integer> res = new ArrayList<>();
+        Arrays.sort(slots1, (a, b) -> a[0] - b[0]);
+        Arrays.sort(slots2, (a, b) -> a[0] - b[0]);
+        int m = slots1.length, n = slots2.length;
+        int i = 0, j = 0;
+
+        while (i < m && j < n) {
+            int[] s1 = slots1[i];
+            int[] s2 = slots2[j];
+
+            int start = Math.max(s1[0], s2[0]);
+            if (s1[1] > s2[1]) {
+                if (s2[1] - start >= duration) {
+                    return Arrays.asList(start, start + duration);
+                }
+                j++;
+            }
+            else {
+                if (s1[1] - start >= duration) {
+                    return Arrays.asList(start, start + duration);
+                }
+                i++; 
+            }
+        }
+        return new ArrayList<>();
+    }
+}
+*/
+
+class Solution {
+    public List<Integer> minAvailableDuration(int[][] slots1, int[][] slots2, int duration) {
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[0] - b[0]);
+        for (var x : slots1) {
+            if (x[1] - x[0] >= duration) pq.offer(x);
+        }
+        for (var x : slots2) {
+            if (x[1] - x[0] >= duration) pq.offer(x);
+        }
+
+        while (pq.size() > 1) {
+            if (pq.poll()[1] >= pq.peek()[0] + duration)
+                return Arrays.asList(pq.peek()[0], pq.peek()[0] + duration);
+        }
+        return new ArrayList<>();
+    }
+}
