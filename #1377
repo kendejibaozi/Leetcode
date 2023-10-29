@@ -1,0 +1,39 @@
+class Solution {
+    double res;
+    int target;
+    List<Integer>[] g;
+    int t;
+    public double frogPosition(int n, int[][] edges, int t, int target) {
+        this.t = t;
+        this.target = target;
+        g = new List[n + 1];
+        Arrays.setAll(g, a -> new ArrayList<>());
+        for (var x : edges) {
+            int i = x[0];
+            int j = x[1];
+            g[i].add(j);
+            g[j].add(i);
+        }
+        g[1].add(0);
+        //sda(root节点, 时间, 父节点, p)
+        dfs(1, 0, 0, 1);
+        return res;
+    }
+
+    private boolean dfs(int i, int time, int fa, long p) {
+        if (i == target && ( time == t || g[i].size() == 1)) {
+            res = 1.0 / p;
+            return true;
+        }
+        
+        if (time == t || i == target) return false;
+        
+        for (int j : g[i]) {
+            if (j != fa) {
+                if (dfs(j, time + 1, i, p * (g[i].size() - 1)))
+                    return true;
+            }
+        }
+        return false;
+    }
+}
