@@ -1,0 +1,59 @@
+
+class Solution {
+    List<Integer>[] g;
+    int[] cnt, price;
+    int start, end;
+
+    public int minimumTotalPrice(int n, int[][] edges, int[] price, int[][] trips) {
+        this.price = price;
+        
+        g = new List[n];
+        Arrays.setAll(g, a -> new ArrayList<>());
+        cnt = new int[n];
+        
+        for (var x : edges) {
+            int i = x[0];
+            int j = x[1];
+            g[i].add(j);
+            g[j].add(i);
+        }
+
+        for (var x : trips) {
+            start = x[0];
+            end = x[1];
+            f(start, -1);
+        }
+
+        var res = dfs(0, -1);
+        return Math.min(res[0], res[1]);
+
+    }
+
+    private boolean f(int i, int parent) {
+        if (i == end) {
+            cnt[i]++;
+            return true;
+        }
+        for (var j : g[i]) {
+            if (j != parent && f(j, i)) {
+                cnt[i]++;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private int[] dfs(int i, int parent) {
+        int nohalf = price[i] * cnt[i];
+        int half = nohalf / 2;
+        for (var j : g[i]) {
+            if (j != parent) {
+                var p = dfs(j, i);
+                nohalf += Math.min(p[0], p[1]);
+                half += p[0];
+            }
+        }
+        return new int[]{nohalf, half};
+    }
+
+}
