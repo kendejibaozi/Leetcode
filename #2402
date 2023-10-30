@@ -1,0 +1,49 @@
+class Solution {
+    public int mostBooked(int n, int[][] meetings) {
+
+        //计算每个会议室使用的次数
+        int[] count = new int[n];
+        //空闲
+        PriorityQueue<Integer> idle = new PriorityQueue<>();
+        for (int i = 0; i < n; i++) {
+            idle.offer(i);
+        }
+        //正在使用的会议室 「结束时间， 会议室编号」
+        PriorityQueue<Pair<Long, Integer>> using = new PriorityQueue<>((a,b) -> {
+            long diff = a.getKey() - b.getKey();
+            if (diff != 0)
+                return Long.compare(diff, 0);
+            else return Integer.compare(a.getValue(), b.getValue());
+        });
+        //以开始时间为所有会议排序
+        Arrays.sort(meetings, (a, b) -> a[0] - b[0]);
+
+        //开始安排
+        for (int[] m : meetings) {
+            long st = m[0], end = m[1];
+            //弹出所有已经结束的会议
+            while (!using.isEmpty() && using.peek().getKey() <= st) {
+                idle.offer(using.poll().getValue());
+            }
+            //找一个可以使用的会议室
+            int id;
+            if (idle.isEmpty()) {
+                var p = using.poll();
+                end += p.getKey() - st;
+                id = p.getValue();
+            }
+            else {
+                id = idle.poll();
+            }
+            count[id]++;
+            using.offer(new Pair<>(end, id));
+        }
+        
+        int res = 0;
+        for (int i = 0; i < n; i++) {
+            if (count[i] > count[res]) res = i;
+        }
+        return res;
+
+    }
+}
