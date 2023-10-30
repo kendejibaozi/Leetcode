@@ -1,0 +1,139 @@
+/*
+class Solution {
+    Map<Integer, List<int[]>> map = new HashMap<>();
+    int[][] matrix;
+    int count = 0;
+    int maxIsland = 0;
+    List<Integer> answer = new ArrayList<>();
+    int[][] dirs = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
+    int m, n;
+    public List<Integer> numIslands2(int m, int n, int[][] positions) {
+        this.m = m;
+        this.n = n;
+        matrix = new int[m][n];
+        for (int i =0 ; i < positions.length; i++) {
+            process(positions[i]);
+        }
+        return answer;
+    }
+
+    private void process(int[] position) {
+        int x = position[0], y = position[1];
+        Set<Integer> adj = new HashSet<>();
+        //检查是否已经存在
+        if (matrix[position[0]][position[1]] != 0) {
+            answer.add(answer.get(answer.size() - 1));
+            return;
+        }
+        //nums是四边中有相邻岛屿的个数
+        int nums = 0;
+        int color = -1;
+        for (int i = 0; i < 4; i++) {
+            int newx = x +dirs[i][0];
+            int newy = y + dirs[i][1];
+            //判断是否有效岛屿
+            if (newx >= 0 && newx < m && newy >= 0 && newy < n && matrix[newx][newy] != 0) {
+                adj.add(matrix[newx][newy]);
+            }
+        }
+        List<Integer> list = new ArrayList<>(adj);
+        //合并岛屿
+        if (list.size() > 0) {
+            //得到第一条边的颜
+            int unioncolor = list.get(0);
+            //将position添加
+            matrix[x][y] = unioncolor;
+            map.get(unioncolor).add(position);
+            //将其他集合添加
+            for (int l = 1; l < list.size(); l++) {
+                int curcolor = list.get(l);
+                    for (int[] pos : map.get(curcolor)) {
+                        matrix[pos[0]][pos[1]] = unioncolor;
+                    }
+                map.get(unioncolor).addAll(map.get(curcolor));
+                map.remove(curcolor);
+            }
+        }
+        //创建新岛屿
+        else {
+            maxIsland++;
+            matrix[x][y] = maxIsland;
+            map.put(maxIsland, new ArrayList<>());
+            map.get(maxIsland).add(position);
+            //map.put(maxIsland, position);
+        }
+        //记录结果
+        if (answer.size() == 0)
+            answer.add(1);
+        else
+            answer.add(answer.get(answer.size() - 1) + 1 - adj.size());
+    }
+}
+*/
+
+
+
+class Solution {
+    int[] parent;
+    int[] rank;
+    int[][] dirs = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
+    List<Integer> res = new ArrayList<>();
+    int count = 0;
+    public List<Integer> numIslands2(int m, int n, int[][] positions) {
+
+        parent = new int[m * n];
+        Arrays.fill(parent, -1);
+        rank = new int[m * n];
+    
+        for (int[] pos : positions) {
+            int x = pos[0], y = pos[1];
+            int cur = x * n + y;
+            if (parent[cur] == -1) {
+                parent[cur] = cur;
+                count++;
+
+                for (int i = 0; i < 4; i++) {
+                    int newx = x + dirs[i][0];
+                    int newy = y + dirs[i][1];
+                    int nb = newx * n + newy;
+                    if (newx >= 0 && newx < m && newy >= 0 && newy < n && parent[nb] != -1) {
+                    union(cur, nb);
+                    //count--;
+                    }
+                }
+            }
+            res.add(count);
+        }
+        return res; 
+    }
+
+    private int find(int x) {
+        if (parent[x] != x) {
+            parent[x] = find(parent[x]);
+        }
+        return parent[x];
+    }
+
+    private void union(int x, int y) {
+        int rootX = find(x);
+        int rootY = find(y);
+
+        if (rootX != rootY) {
+            if (rank[rootX] > rank[rootY]) {
+                parent[rootY] = rootX;
+            }
+            else if (rank[rootX] < rank[rootY]) {
+                parent[rootX] = rootY;
+            }
+            else {
+                parent[rootY] = rootX;
+                rank[rootX]++;
+            }
+            count--;
+        }
+    }
+}
+
+
+
+
