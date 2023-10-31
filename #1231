@@ -1,31 +1,38 @@
 class Solution {
+    int[] sweetness;
+    int k;
     public int maximizeSweetness(int[] sweetness, int k) {
-        
+        this.sweetness = sweetness;
+        this.k = k;
+
+        int n = sweetness.length;
         int totalsweet = 0;
         for (var x : sweetness) {
             totalsweet += x;
         }
-        if (k == 0)
-            return totalsweet;
-        int avr = totalsweet / k;
+        if (k == 0) return totalsweet;
+
+        int avr = totalsweet / (k + 1);
         int left = 1, right = avr;
+
         while (left <= right) {
             int mid = left + (right - left) / 2;
-            if (check(sweetness, mid, k + 1)) left = mid + 1;
+            if (check(mid)) left = mid + 1;
             else right = mid - 1;
         }
         return right;
     }
 
-    private boolean check(int[] sweetness, int target, int k) {
-        int count = 0, s = 0;
+    private boolean check(int target) {
+        int sum = 0, cnt = 0;
         for (var x : sweetness) {
-            s += x;
-            if (s >= target) {
-                count++;
-                s = 0;
+            sum += x;
+            if (sum >= target) {
+                sum = 0;
+                cnt++;
             }
         }
-        return count >= k;
+        //if (sum > 0) cnt++;
+        return cnt >= k + 1;
     }
 }
