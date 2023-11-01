@@ -1,0 +1,63 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public List<Integer> closestKValues(TreeNode root, double target, int k) {
+
+        Deque<TreeNode> big = new ArrayDeque<>();
+        Deque<TreeNode> small = new ArrayDeque<>();
+        List<Integer> res = new ArrayList<>();
+        
+        while (root != null) {
+            if (root.val <= target) {
+                small.push(root);
+                root = root.right;
+            }
+            else {
+                big.push(root);
+                root = root.left;
+            }
+        }
+
+        while (k > 0) {
+            double diff1 = small.isEmpty() ? Double.MAX_VALUE : target - small.peek().val;
+            double diff2 = big.isEmpty() ? Double.MAX_VALUE : big.peek().val - target;
+            if (diff1 <= diff2) {
+                TreeNode node = small.pop();
+                res.add(node.val);
+                node = node.left;
+                while (node != null) {
+                    //node = node.right;
+                    small.push(node);
+                    node = node.right;
+                }
+            }
+            else {
+                TreeNode node = big.pop();
+                res.add(node.val);
+                node = node.right;
+                while (node != null) {
+                    //node = node.left;
+                    big.push(node);
+                    node = node.left;
+                }
+            }
+            k--;
+        }
+        return res;
+
+
+    }
+}
