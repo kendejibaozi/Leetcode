@@ -1,0 +1,33 @@
+class Solution {
+    List<String> res = new ArrayList<>();
+    //List<Character> path = new ArrayList<>();
+    StringBuilder path = new StringBuilder();
+    int n;
+    public List<String> generateParenthesis(int n) {
+        this.n = n;
+        dfs(0, 0);
+        return res;
+
+    }
+
+    private void dfs(int i, int k) {
+        if (path.length() == n * 2) {
+            res.add(path.toString());
+            return;
+        }
+
+        //xuan
+        if (i < n) {
+            path.append('(');
+            dfs(i + 1, k + 1);
+            path.deleteCharAt(path.length() - 1);
+        }
+        //bu xuan
+        if (k > 0) {
+            path.append(')');
+            dfs(i, k - 1);
+            path.deleteCharAt(path.length() - 1);
+        }
+
+    }
+}
