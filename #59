@@ -1,0 +1,22 @@
+class Solution {
+    int[][] dirs = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+    public int[][] generateMatrix(int n) {
+
+        int[][] grid = new int[n][n];
+        int k = 0, x = 0, y = 0;
+        for (int i = 1; i <= n * n; i++) {
+            grid[x][y] = i;
+            int newx = x + dirs[k][0];
+            int newy = y + dirs[k][1];
+            if (newx < 0 || newx >= n || newy < 0 || newy >= n || grid[newx][newy] != 0) {
+                k = (k + 1) % 4;
+                newx = x + dirs[k][0];
+                newy = y + dirs[k][1];
+            }
+            x = newx;
+            y = newy;
+        }
+        return grid;
+
+    }
+}
