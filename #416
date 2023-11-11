@@ -1,0 +1,57 @@
+/*
+class Solution {
+    int n, target = 0;
+    int[] nums;
+    Map<String, Boolean> memo;
+    public boolean canPartition(int[] nums) {
+        this.nums = nums;
+        n = nums.length;
+        for (var x : nums) {
+            target += x;
+        }
+        if (target % 2 == 1) return false;
+        target /= 2;
+        memo = new HashMap<>();
+        return dfs(n - 1, target);
+    }
+
+    private boolean dfs(int i, int c) {
+        if (c < 0) return false;
+        if (i < 0) return c == 0;
+        String key = i + "." + c;
+        if (memo.containsKey(key)) {
+            return memo.get(key);
+        }
+        boolean res = dfs(i - 1, c - nums[i]) || dfs(i - 1, c);
+        memo.put(key, res);
+        return res;
+
+
+    }
+}
+*/
+class Solution {
+    public boolean canPartition(int[] nums) {
+
+        int n = nums.length;
+        int m = 0;
+        for (var x : nums) {
+            m += x;
+        }
+        if (m % 2 == 1) return false;
+        m /= 2;
+        boolean[][] dp = new boolean[n + 1][m + 1];
+        dp[0][0] = true;
+        for (int i = 0; i < n; i++) {
+            for (int c = 0; c < m + 1; c++) {
+                if (nums[i] <= c) {
+                    dp[i + 1][c] = dp[i][c - nums[i]] || dp[i][c];
+                }
+                else {
+                    dp[i + 1][c] = dp[i][c];
+                }
+            }
+        }
+        return dp[n][m];
+    }
+}
