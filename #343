@@ -1,0 +1,22 @@
+class Solution {
+    int n;
+    int[] memo;
+    public int integerBreak(int n) {
+        this.n = n;
+        memo = new int[n + 1];
+        Arrays.fill(memo, -1);
+        return dfs(n);
+    }
+
+    private int dfs(int x) {
+        if (x <= 0) return 0;
+        if (x == 1) return 1;
+        if (memo[x] != -1) return memo[x]; 
+        int curmax = 0;
+        for (int i = 1; i <= x / 2; i++) {
+            int j = x - i;
+            curmax = Math.max(curmax, Math.max(i * j, i * dfs(j)));
+        }
+        return memo[x] = curmax;
+    }
+}
