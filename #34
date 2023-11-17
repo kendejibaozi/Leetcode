@@ -1,0 +1,26 @@
+class Solution {
+    int[] nums;
+    int n;
+    public int[] searchRange(int[] nums, int target) {
+        this.nums = nums;
+        n = nums.length;
+        int t1 = target, t2 = target + 1;
+        int idx1 = lowerBound(t1), idx2 = lowerBound(t2) - 1;
+        if (n == 0 || idx1 >= n || idx2 < 0 || nums[idx1] != target) {
+            return new int[]{-1, -1};
+        }
+        else {
+            return new int[]{idx1, idx2};
+        }
+    }
+
+    private int lowerBound(int t) {
+        int left = 0, right = n - 1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] < t) left = mid + 1;
+            else right = mid - 1;
+        }
+        return left;
+    }
+}
