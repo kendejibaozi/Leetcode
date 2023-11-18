@@ -1,0 +1,68 @@
+class Solution {
+    int n;
+    int[][] matrix;
+    public void rotate(int[][] matrix) {
+        this.matrix = matrix;
+        n = matrix.length;
+
+        //上下对称：m[i][j] -> m[n-i-1][j]
+        //左右对称：m[i][j] -> m[i][n-j-1]
+        //主对角线：m[i][j] -> m[j][i]
+        //副对角线：m[i][j] -> m[n-j-1][n-i-1]
+
+        //m[i][j] -> m[j][n-i-1] 主对角线+左右 注意顺序
+        f1(matrix);
+        f2(matrix);
+
+    }
+
+    private void f1(int[][] matrix) {
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = i + 1; j < n; j++) {
+                swap(i, j, j, i);
+            }
+        }
+    }
+
+    private void f2(int[][] matrix) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n / 2; j++) {
+                swap(i, j, i, n - j - 1);
+            }
+        }
+    }
+
+    private void swap(int i, int j, int newi, int newj) {
+        int temp = matrix[i][j];
+        matrix[i][j] = matrix[newi][newj];
+        matrix[newi][newj] = temp;
+    }
+}
+
+/*
+class Solution {
+    public void rotate(int[][] matrix) {
+        int n = matrix.length;
+
+        // 沿主对角线翻转
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = i + 1; j < n; j++) {
+                swap(matrix, i, j, j, i);
+            }
+        }
+
+        // 沿水平中线翻转
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n / 2; j++) {
+                swap(matrix, i, j, i, n - j - 1);
+            }
+        }
+    }
+
+    private void swap(int[][] matrix, int i, int j, int newi, int newj) {
+        int temp = matrix[i][j];
+        matrix[i][j] = matrix[newi][newj];
+        matrix[newi][newj] = temp;
+    }
+}
+*/
