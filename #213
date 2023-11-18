@@ -1,0 +1,20 @@
+class Solution {
+    int[] nums, memo;
+    int n;
+    public int rob(int[] nums) {
+        this.nums = nums;
+        n = nums.length;
+        memo = new int[n];
+        Arrays.fill(memo, -1);
+        int s1 = nums[0] + dfs(n - 2, 2);
+        Arrays.fill(memo, -1);
+        int s2 = dfs(n - 1, 1);
+        return Math.max(s1, s2);
+    }
+
+    private int dfs(int i, int k) {
+        if (i < k) return 0;
+        if (memo[i] != -1) return memo[i];
+        return memo[i] = Math.max(dfs(i - 2, k) + nums[i], dfs(i - 1, k));
+    }
+}
