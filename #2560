@@ -1,0 +1,54 @@
+
+class Solution {
+    int[] nums, memo;
+    int n, k;
+    public int minCapability(int[] nums, int k) {
+        this.nums = nums;
+        this.k = k;
+        n = nums.length;
+        memo = new int[n];
+        int left = 0, right = 0;
+        for (int i = 0; i < n; i++) {
+            right = Math.max(right, nums[i]);
+        }
+
+        
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            
+            Arrays.fill(memo, -1);
+            //if (dfs(n - 1, mid) >= k) right = mid - 1;
+            if (check(mid) >= k) right = mid - 1;
+            else left = mid + 1;
+        }
+        return left;
+    }
+
+    private int dfs(int i, int target) {
+        if (i < 0) return 0;
+        if (memo[i] != -1) return memo[i];
+        //xuan huo bu xuan
+        int cur = 0;
+        if ( nums[i] <= target) {
+            cur = Math.max(dfs(i - 1, target), dfs(i - 2, target) + 1);
+        } 
+        else {
+            cur = dfs(i - 1, target);
+        }
+        return memo[i] = cur;   
+    }
+
+    private int check(int target) {
+        int[] dp = new int[n + 2];
+        for (int i = 0; i < n; i++) {
+            if (nums[i] <= target) {
+                dp[i + 2] = Math.max(dp[i + 1], dp[i] + 1);
+            }
+            else {
+                dp[i + 2] = dp[i + 1];
+            }
+        }
+        return dp[n + 1];
+    }
+}
+
