@@ -1,0 +1,33 @@
+class Solution {
+    int[] nums, memo;
+    int n, res = Integer.MIN_VALUE;
+    public int maxSubArray(int[] nums) {
+        this.nums = nums;
+        int n = nums.length;
+        memo = new int[n];
+        Arrays.fill(memo, Integer.MIN_VALUE);
+        //dfs(n - 1);
+        //return res;
+        /*
+        int[] dp = new int[n + 1];
+        for (int i = 0; i < n; i++) {
+            dp[i + 1] = Math.max(dp[i] + nums[i], nums[i]);
+            res = Math.max(res, dp[i + 1]);
+        }
+        */
+        int pre = 0; //dp[0];
+        for (int i = 0; i < n; i++) {
+            pre = Math.max(pre + nums[i], nums[i]);
+            res = Math.max(res, pre);
+        }
+        return res;
+    }
+
+    private int dfs(int i) {
+        if (i < 0) return 0;
+        if (memo[i] != Integer.MIN_VALUE) return memo[i];
+        memo[i] = Math.max(dfs(i - 1) + nums[i], nums[i]);
+        res = Math.max(res, memo[i]);
+        return memo[i];
+    }
+}
