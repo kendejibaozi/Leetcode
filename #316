@@ -1,0 +1,24 @@
+class Solution {
+    public String removeDuplicateLetters(String s) {
+        
+        char[] chars = s.toCharArray();
+        int[] left = new int[26];
+        for (char c : chars) {
+            left[c - 'a']++;
+        }
+
+        boolean[] inRes = new boolean[26];
+        StringBuilder sb = new StringBuilder();
+        for (char c : chars) {
+            left[c - 'a']--;
+            if (inRes[c - 'a']) continue;
+            while (!sb.isEmpty() && c < sb.charAt(sb.length() - 1) && left[sb.charAt(sb.length() - 1) - 'a'] > 0) {
+                inRes[sb.charAt(sb.length() - 1) - 'a'] = false;
+                sb.deleteCharAt(sb.length() - 1);
+            }
+            inRes[c - 'a'] = true;
+            sb.append(c);
+        }
+        return sb.toString();
+    }
+}
