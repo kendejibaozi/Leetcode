@@ -1,0 +1,74 @@
+class Solution {
+    public String reorganizeString(String s) {
+
+        int[] cnt = new int[26];
+        for (char c : s.toCharArray()) {
+            cnt[c - 'a']++;
+        }
+
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> {
+            if (a[1] == b[1]) return a[0] - b[0];
+            return b[1] - a[1];
+        });
+
+        for (int i = 0; i < 26; i++) {
+            if (cnt[i] > 0) {
+                pq.offer(new int[]{i, cnt[i]});
+            }
+        }
+
+        StringBuilder res = new StringBuilder();
+
+        while (!pq.isEmpty()) {
+            int requiredSize = Math.min(2, s.length() - res.length());
+            if (pq.size() < requiredSize) return "";
+
+            List<int[]> temp = new ArrayList<>();
+            for (int i = 0; i < requiredSize; i++) {
+                int[] cur = pq.poll();
+                res.append((char)(cur[0] + 'a'));
+                if (--cur[1] > 0) {
+                    temp.add(cur);
+                }
+            }
+            for (var x : temp) {
+                pq.offer(x);
+            }
+        }
+        return res.toString();
+
+    }
+}
+
+/*
+class Solution {
+    public String reorganizeString(String s) {
+        int[] count = new int[26];
+        int maxCount = 0;
+        for (char c : s.toCharArray()) {
+            count[c - 'a']++;
+            maxCount = Math.max(maxCount, count[c - 'a']);
+        }
+
+        if (maxCount > (s.length() + 1) / 2) return "";
+
+        char[] result = new char[s.length()];
+        int evenIdx = 0, oddIdx = 1, n = s.length();
+        for (int i = 0; i < 26; i++) {
+            char c = (char) (i + 'a');
+            while (count[i] > 0 && count[i] <= n / 2 && oddIdx < n) {
+                result[oddIdx] = c;
+                count[i]--;
+                oddIdx += 2;
+            }
+            while (count[i] > 0) {
+                result[evenIdx] = c;
+                count[i]--;
+                evenIdx += 2;
+            }
+        }
+
+        return new String(result);
+    }
+}
+*/
