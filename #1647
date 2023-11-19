@@ -1,0 +1,24 @@
+class Solution {
+    public int minDeletions(String s) {
+
+        int[] cnt = new int[26];
+        for (char c : s.toCharArray()) {
+            cnt[c - 'a']++;
+        }
+        Arrays.sort(cnt);
+        int res = 0, pre = cnt[25];
+        for (int i = 24; i >= 0; i--) {
+            if (pre > 0) {
+                while (cnt[i] >= pre) {
+                    cnt[i]--;
+                    res++;
+                }
+                pre = cnt[i];
+            }
+            else {
+                res += cnt[i];
+            }
+        }
+        return res;
+    }
+}
