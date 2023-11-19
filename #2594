@@ -1,0 +1,23 @@
+class Solution {
+    public long repairCars(int[] ranks, int cars) {
+        
+        int minRank = ranks[0];
+        int n = ranks.length;
+        for (int i = 1; i < n; i++) {
+            minRank = Math.min(minRank, ranks[i]);
+        }
+
+        long left = 0, right = (long)minRank * cars * cars;
+        while (left <= right) {
+            long mid = left + (right - left) / 2;
+            long cnt = 0;
+            for (int r : ranks) {
+                cnt += Math.sqrt(mid / r);
+            }
+            if (cnt >= cars) right = mid - 1;
+            else left = mid + 1;
+        }
+        return left;
+
+    }
+}
