@@ -1,0 +1,24 @@
+class Solution {
+    public List<String> letterCombinations(String digits) {
+        String[] dic = {"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+        List<String> res = new ArrayList<>();
+        if (digits.length() < 1) return res;
+        char[] cur = new char[n];
+        dfs(dic, 0, cur, res, digits);
+        return res;
+    }
+
+    private void dfs(String[] dic, int k, char[] cur, List<String> res, String digits) {
+        if (k == digits.length()) {
+            res.add(new String(cur));
+            return;
+        }
+
+        int index = digits.charAt(k) - '0';
+        for (char c : dic[index].toCharArray()) {
+            cur[k] = c;
+            dfs(dic, k + 1, cur, res, digits);
+        }
+        
+    }
+}
