@@ -1,0 +1,22 @@
+class Solution {
+    public int bestClosingTime(String customers) {
+        char[] chars = customers.toCharArray();
+        int n = chars.length;
+
+        int cnt = 0;
+        for (char x : chars) {
+            if (x == 'Y') cnt++;
+        } 
+        int minCost = cnt;
+        int res = 0;
+        for (int i = 1; i < n + 1; i++) {
+            if (chars[i - 1] == 'N') cnt++;
+            else cnt--;
+            if (cnt < minCost) {
+                minCost = cnt;
+                res = i;
+            }
+        }
+        return res;
+    }
+}
