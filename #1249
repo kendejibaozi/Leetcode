@@ -1,0 +1,33 @@
+class Solution {
+    public String minRemoveToMakeValid(String s) {
+        
+        char[] chars = s.toCharArray();
+        int n = chars.length;
+        //记录无效括号
+        boolean[] invalid = new boolean[n];
+        //记录左括号
+        Deque<Integer> dq = new ArrayDeque<>();
+        for (int i = 0; i < n; i++) {
+            char c = chars[i];
+            if (c == '(') {
+                invalid[i] = true;
+                dq.offer(i);
+            }
+            else if (c == ')') {
+                if (!dq.isEmpty()) {
+                    invalid[dq.poll()] = false;
+                }
+                else {
+                    invalid[i] = true;
+                }
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < n; i++) {
+            if (!invalid[i]) sb.append(chars[i]);
+        }
+        return sb.toString();
+
+    }
+}
