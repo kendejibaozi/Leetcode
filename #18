@@ -1,0 +1,37 @@
+class Solution {
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+
+        List<List<Integer>> res = new ArrayList<>();
+        Arrays.sort(nums);
+        int n = nums.length;
+        for (int a = 0; a < n - 3; a++) {
+            long x = nums[a];
+            //if (x > target) break;
+            if (a > 0 && nums[a] == nums[a - 1]) continue;
+            if (x + nums[a + 1] + nums[a + 2] + nums[a + 3] > target) break;
+            if (x + nums[n - 1] + nums[n - 2] + nums[n - 3] < target) continue;
+            for (int b = a + 1; b < n - 2; b++) {
+                long y = nums[b];
+                //if (y > target) break;
+                if (b > a + 1 && nums[b] == nums[b - 1]) continue;
+                if (x + y + nums[b + 1] + nums[b + 2] > target) break;
+                if (x + y + nums[n - 1] + nums[n - 2] < target) continue;
+                int c = b + 1, d = n - 1;
+                while (c < d) {
+                    long sum = x + y + nums[c] + nums[d];
+                    if (sum == target) {
+                        res.add(Arrays.asList(nums[a], nums[b], nums[c], nums[d]));
+                        c++;
+                        d--;
+                        while (c < d && nums[c] == nums[c - 1]) c++;
+                        while (c < d && nums[d] == nums[d + 1]) d--;
+                    }
+                    else if (sum < target) c++;
+                    else d--;
+                }
+            }
+        }
+        return res;
+
+    }
+}
