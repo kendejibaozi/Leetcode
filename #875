@@ -1,0 +1,29 @@
+class Solution {
+    int[] piles;
+    int h;
+    public int minEatingSpeed(int[] piles, int h) {
+        this.piles = piles;
+        this.h = h;
+
+        //上限：最大piles【i】 下限：1
+        int left = 1, right = 0;
+        for (var x : piles) {
+            right = Math.max(right, x);
+        }
+
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (check(mid)) right = mid - 1;
+            else left = mid + 1;
+        }
+        return left;
+    }
+
+    private boolean check(int target) {
+        long cnt = 0;
+        for (var x : piles) {
+            cnt += (x + target - 1) / target;
+        }
+        return cnt <= h;
+    }
+}
