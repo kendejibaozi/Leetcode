@@ -1,0 +1,54 @@
+/*
+class Solution {
+    int[] nums;
+    int n, res = 0;
+    Map<Integer, Integer>[] map;
+    public int longestArithSeqLength(int[] nums) {
+        this.nums = nums;
+        n = nums.length;
+        map = new Map[n];
+        for (int i = 1; i < n; i++) {
+            dfs(i);
+        }
+        return res;
+    }
+
+    private Map<Integer, Integer> dfs(int i) {
+        if(map[i] != null) return map[i];
+        map[i] = new HashMap<>();
+        for (int j = i - 1; j >= 0; j--) {
+            int d = nums[i] - nums[j];
+            if (!map[i].containsKey(d)) {
+                map[i].put(d, dfs(j).getOrDefault(d, 1) + 1);
+                res = Math.max(res, map[i].get(d));
+            }
+        }
+        return map[i];
+    }
+}   
+*/
+
+
+class Solution{
+    public int longestArithSeqLength(int[] nums) {
+
+        int n = nums.length, res = 0;
+        Map<Integer, Integer>[] dp = new Map[n];
+        Arrays.setAll(dp, a -> new HashMap<>());
+        for (int i = 1; i < n; i++) {
+            for (int j = i - 1; j >= 0; j--) {
+                int d = nums[i] - nums[j];
+                if (!dp[i].containsKey(d)) {
+                    dp[i].put(d, dp[j].getOrDefault(d, 1) + 1);
+                    res = Math.max(res, dp[i].get(d));
+                }
+            }
+        }
+        return res;
+
+    }
+}
+
+
+
+
