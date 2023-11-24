@@ -1,0 +1,30 @@
+class Solution {
+    int[] nums;
+    int n;
+    public int minimizeMax(int[] nums, int p) {
+        this.nums = nums;
+        n = nums.length;
+        Arrays.sort(nums);
+        int left = 0, right = nums[n - 1] - nums[0];
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (check(mid, p)) right = mid - 1;
+            else left = mid + 1;
+        }
+        return left;
+    }
+
+    private boolean check(int target, int p) {
+        int cnt = 0, i = 0;
+        while (i < n - 1) {
+            if (nums[i + 1] - nums[i] <= target) {
+                cnt++;
+                i += 2;
+            }
+            else {
+                i++;
+            }
+        }
+        return cnt >= p;
+    }
+}   
