@@ -1,0 +1,21 @@
+class Solution {
+    public int minOperations(int[] nums, int x) {
+
+        int sum = 0; 
+        for (int num : nums) {
+            sum += num;
+        }
+        if (sum < x) return -1;
+        int target = sum - x;
+
+        //找出最长子数组 和为target
+        int cnt = -1, left = 0, n = nums.length;
+        sum = 0;
+        for (int right = 0; right < n; right++) {
+            sum += nums[right];
+            while (sum > target) sum -= nums[left++];
+            if (sum == target) cnt = Math.max(cnt, right - left + 1);
+        }
+        return cnt < 0 ? -1 : n - cnt;
+    }
+}
