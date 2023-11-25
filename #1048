@@ -1,0 +1,28 @@
+class Solution {
+    Map<String, Integer> map = new HashMap<>();
+
+    public int longestStrChain(String[] words) {
+        for (var x : words) {
+            map.put(x, 0);
+        }
+
+        int res = 0;
+        for (var x : map.keySet()) {
+            res = Math.max(res, dfs(x));
+        }
+        return res;
+    }
+
+    private int dfs(String s) {
+        int cur = map.get(s);
+        if (cur > 0) return cur;
+
+        for (int i = 0; i < s.length(); i++) {
+            String next = s.substring(0, i) + s.substring(i + 1);
+            if (map.containsKey(next))
+                cur = Math.max(cur, dfs(next));
+        }
+        map.put(s, cur + 1);
+        return cur + 1;
+    }
+}
