@@ -1,0 +1,21 @@
+class Solution {
+    public double myPow(double x, int n) {
+
+        long N = n;
+        return N >= 0 ? cal(x, N) : 1.0 / cal(x, -N);
+    }
+
+    private double cal(double x, long N) {
+        double res = 1.0;
+
+        double contri = x;
+        while (N > 0) {
+            if (N % 2 == 1) {
+                res *= contri;
+            }
+            contri *= contri;
+            N /= 2;
+        }
+        return res;
+    }
+}
