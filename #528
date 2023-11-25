@@ -1,0 +1,29 @@
+class Solution {
+    int[] preSum;
+
+    public Solution(int[] w) {
+        int n = w.length;
+        preSum = new int[n + 1];
+        for (int i = 1; i <= n; i++) {
+            preSum[i] = preSum[i - 1] + w[i - 1];
+        }
+    }
+    
+    public int pickIndex() {
+        int len = preSum.length;
+        int target = (int)(Math.random() * preSum[len - 1]) + 1;
+        int left = 1, right = len - 1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (preSum[mid] < target) left = mid + 1;
+            else right = mid - 1;
+        }
+        return left - 1;
+    }
+}
+
+/**
+ * Your Solution object will be instantiated and called as such:
+ * Solution obj = new Solution(w);
+ * int param_1 = obj.pickIndex();
+ */
