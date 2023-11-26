@@ -1,0 +1,31 @@
+class Solution {
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+
+        int n = numCourses;
+        List<Integer>[] g = new List[n];
+        Arrays.setAll(g, a -> new ArrayList<>());
+        int[] degree = new int[n];
+
+        for (var x : prerequisites) {
+            g[x[1]].add(x[0]);
+            degree[x[0]]++;
+        }
+
+        Queue<Integer> q = new ArrayDeque<>();
+        for (int i = 0; i < n; i++) {
+            if (degree[i] == 0) q.offer(i);
+        }
+        int cnt = 0;
+
+        while (!q.isEmpty()) {
+            int cur = q.poll();
+            cnt++;
+            for (int idx : g[cur]) {
+                degree[idx]--;
+                if (degree[idx] == 0) q.offer(idx);
+            }
+        }
+        return cnt == n;
+    }
+}
+
