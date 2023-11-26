@@ -1,0 +1,24 @@
+class Solution {
+    public int compress(char[] chars) {
+
+        int n = chars.length, p1 = 0, p2 = 0;
+        while (p1 < n) {
+            char cur = chars[p1];
+            chars[p2++] = cur;
+
+            int cnt = 0;
+            while (p1 < n && chars[p1] == cur) {
+                cnt++;
+                p1++;
+            }
+
+            if (cnt > 1) {
+                String s = Integer.toString(cnt);
+                for (int i = 0; i < s.length(); i++) {
+                    chars[p2++] = s.charAt(i);
+                }
+            }
+        }
+        return p2;
+    }
+}
