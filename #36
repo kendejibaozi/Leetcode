@@ -1,0 +1,33 @@
+class Solution {
+        int[][] rows, cols, boxes;
+        char[][] board;
+    public boolean isValidSudoku(char[][] board) {
+        this.board = board;
+        rows = new int[9][10];
+        cols = new int[9][10];
+        boxes = new int[9][10];
+
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (board[i][j] != '.') {
+                    int k = board[i][j] - '0';
+                    if (!isvalid(i, j, k)) return false;
+                    mark(i, j, k);
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean isvalid(int i, int j, int k) {
+        int idx = 3 * (i / 3) + j / 3;
+        return (rows[i][k] == 0 && cols[j][k] == 0 && boxes[idx][k] == 0);
+    }
+
+    private void mark(int i, int j, int k) {
+        int idx = 3 * (i / 3) + j / 3;
+        rows[i][k] = 1;
+        cols[j][k] = 1;
+        boxes[idx][k] = 1;
+    }
+}
