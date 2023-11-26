@@ -1,0 +1,31 @@
+class Solution {
+    public boolean validateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+
+        int[] parentCount = new int[n];
+        for (int i = 0; i < n; i++) {
+            if (leftChild[i] != -1) {
+                if (++parentCount[leftChild[i]] > 1) return false;
+            }
+            if (rightChild[i] != -1) {
+                if (++parentCount[rightChild[i]] > 1) return false;
+            }
+        }
+        int rootCount = 0, root = -1;
+        for (int i = 0; i < n; i++) {
+            if (parentCount[i] == 0) {
+                rootCount++;
+                root = i;
+            }
+        }
+        if (rootCount != 1) return false;
+        boolean[] visited = new boolean[n];
+        return dfs(root, leftChild, rightChild, visited) == n ? true : false;
+    }
+
+    private int dfs(int root, int[] leftChild, int[] rightChild, boolean[] visited) {
+        if (root == -1 || visited[root]) return 0;
+        visited[root] = true;
+        return 1 + dfs(leftChild[root], leftChild, rightChild, visited)
+                 + dfs(rightChild[root], leftChild, rightChild, visited);
+    }
+}
